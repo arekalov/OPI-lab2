@@ -23,7 +23,7 @@ commit() {
     fi
     
     rm -rf *
-    cp -r ../commits/commit$1 .
+    cp -r ../commits/commit$1/* .
     git add .
     git commit --allow-empty --quiet -m $1
     echo "Commit '$1' on $(git branch --show-current)" 
