@@ -1,3 +1,6 @@
 /data
 /git
 /svn
+.DS_Store
+/commits/.DS_Store
+

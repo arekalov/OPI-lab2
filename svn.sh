@@ -1,6 +1,6 @@
 #Variables
 REPO_URL="file://$(pwd)/svn/repo"
-COMMITS="$(pwd)/svn/data"
+COMMITS="../../commits"
 CURRENT_USER="red"
 
 #Functions definitions
@@ -19,8 +19,10 @@ blue() {
 }
 
 commit() {
-    svn rm * --force 
-    cp $COMMITS/$1/* .
+    if compgen -G "./*" > /dev/null; then
+       svn rm --force ./*
+    fi
+    cp $COMMITS/commit$1/* .
     svn add * --force 
     svn commit -m "r$1" --username $CURRENT_USER
     echo "Commit $1"
@@ -49,7 +51,7 @@ switch_to_trunk() {
 }
 
 merge() {
-	svn merge --non-interactive $REPO_URL/branches/"$1" 
+	svn merge --accept working --non-interactive $REPO_URL/branches/"$1" 
 	svn resolved *
     echo "Merge from $1 to current branch"
 }
@@ -63,16 +65,13 @@ cd svn
 svnadmin create repo
 svn mkdir $REPO_URL/trunk $REPO_URL/branches -m "Init file structure" --username $CURRENT_USER
 
-#Commits files generating
-python3 ../file_generator.py $(pwd)/data
-
 #Create working directory
 svn checkout $REPO_URL/trunk working_copy
 cd working_copy
 
 
 #Commits
-cp $COMMITS/0/* . 
+cp $COMMITS/commit0/* . 
 svn commit -m "r0" --username $CURRENT_USER
 
 branch_from_trunk branch1
