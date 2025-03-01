@@ -22,6 +22,8 @@ commit() {
         return 1
     fi
     
+    rm -rf *
+    cp -r ../commits/commit$1 .
     git add .
     git commit --allow-empty --quiet -m $1
     echo "Commit '$1' on $(git branch --show-current)" 
@@ -45,7 +47,7 @@ merge() {
     fi
     
      if git show-ref --verify --quiet "refs/heads/$1"; then
-        git merge --no-commit $1
+        git merge --strategy=ours --no-edit $1
         echo "Merged $(git branch --show-current) to $1"
     else
         echo "The branch \"$1\" does not exist."
